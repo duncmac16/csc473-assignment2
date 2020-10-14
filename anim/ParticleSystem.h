@@ -23,8 +23,10 @@ public:
 				set_max(std::stod(argv[1]));
 			}
 			catch (const std::exception& error) {
-				animTcl::OutputMessage("[dim] Error: %s", error.what());
+				animTcl::OutputMessage("[dim] Error: %s\n", error.what());
+				return TCL_ERROR;
 			}
+			return TCL_OK;
 		}
 		else if (strcmp(argv[0], "particle") == 0) {
 			try {
@@ -36,17 +38,35 @@ public:
 				set_particle(i, mass, pos, vel);
 			}
 			catch (const std::exception& error) {
-				animTcl::OutputMessage("[particle] Error: %s", error.what());
+				animTcl::OutputMessage("[particle] Error: %s\n", error.what());
+				return TCL_ERROR;
 			}
+			return TCL_OK;
 		}
 		else if (strcmp(argv[0], "all_velocities") == 0) {
-
+			Vector vel;
+			try {
+				setVector(vel, std::stod(argv[1]), std::stod(argv[2]), std::stod(argv(3));
+			}
+			catch (const std::exception& error) {
+				animTcl::OutputMessage("[all_velocities] Error: %s\n", error.what());
+				return TCL_ERROR;
+			}
+			for (auto& p : particles) {
+				p.set_velocity(vel);
+			}
+			return TCL_OK;
 		} 
+		else {
+			animTcl::OutputMessage("[Particle System] Error: Could not match command \"%s\" to any known commands\n",
+				argv[0]);
+			return TCL_ERROR;
+		}
 	}
 
 	void display(GLenum mode = GL_RENDER)
 	{
-		for (auto& p : particles){
+		for (auto& p : particles) {
 			p.display(mode);
 		}
 	}

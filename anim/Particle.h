@@ -42,7 +42,7 @@ public:
 		glTranslated(m_position[0], m_position[1], m_position[2]);
 		glScaled(0.1f, 0.1f, 0.1f);
 
-		glutSolidSphere(1.0, 20, 20);
+		glmDraw(&m_model, GL_POINT);
 
 		glPopAttrib();
 		glPopMatrix();
@@ -52,4 +52,5 @@ private:
 	double m_mass;
 	Vector m_position, m_velocity;
 	GLMmodel m_model;
+	bool m_fixed;
 };
