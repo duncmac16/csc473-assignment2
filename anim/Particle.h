@@ -1,21 +1,23 @@
 #pragma once
 
 #include "BaseSystem.h"
-
+#include <memory>
 
 class Spring;
 
 class Particle{
 public:
-	double m_mass;
+	double m_mass, m_radius, scale;
 	Vector m_position, m_velocity, x_1;
 	GLMmodel m_model;
 	bool m_fixed = false;
-	Spring* m_spring = nullptr;
+	std::vector<std::shared_ptr<Spring>> m_springs;
 
 	Particle()
 	{
 		m_mass = 1.0;
+		m_radius = 1.0;
+		scale = 0.1;
 		setVector(m_position, 0.0, 0.0, 0.0);
 		setVector(m_velocity, 0.0, 0.0, 0.0);
 		VecCopy(x_1, m_position);
@@ -50,12 +52,14 @@ public:
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
-		glTranslated(m_position[0], m_position[1], m_position[2]);
-		glScaled(1.0f, 1.0f, 1.0f);
+		glTranslated(m_position[0], m_position[1], m_position[2] - 40.55);
+		glScaled(scale, scale, scale);
 
-		glBegin(GL_POINTS);
+		/*glBegin(GL_POINTS);
 			glVertex3d(m_position[0], m_position[1], m_position[1]);
-		glEnd();
+		glEnd();*/
+
+		GLdrawSphere(m_radius, m_position);
 
 		glPopAttrib();
 		glPopMatrix();

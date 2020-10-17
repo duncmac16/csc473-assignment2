@@ -7,6 +7,7 @@
 #include <vector>
 #include "Particle.h"
 #include "Spring.h"
+#include "GroundPlane.h"
 
 #include <assert.h>
 
@@ -33,8 +34,9 @@ public:
 	virtual void getState( double *p );
 	virtual void setState( double  *p );
 	virtual std::vector<Particle>& particles() = 0;
-	virtual std::vector<Spring>& springs() = 0;
-	virtual void set_spring(std::size_t i, std::size_t p1, std::size_t p2, double ks, double kd, double rest_len) {  }
+	virtual std::vector<std::shared_ptr<Spring>>& springs() = 0;
+	virtual void set_spring(std::size_t p1, std::size_t p2, double ks, double kd, double rest_len) = 0;
+	virtual GroundPlane& ground_plane() = 0;
 
 } ;
 

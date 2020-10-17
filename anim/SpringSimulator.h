@@ -28,8 +28,7 @@ public:
 					std::stoi(argv[2]),
 					std::stoi(argv[3]),
 					std::stod(argv[4]),
-					std::stod(argv[5]),
-					std::stod(argv[6]));
+					std::stod(argv[5]));
 				return TCL_OK;
 			}
 			catch (const std::exception& error) {
@@ -39,7 +38,7 @@ public:
 		}
 		else if (strcmp(argv[0], "fix") == 0) {
 			try {
-				m_particle_system->particles()[std::stoi(argv[1])];
+				m_particle_system->particles()[std::stoi(argv[1])].m_fixed = true;
 				return TCL_OK;
 			}
 			catch (const std::exception& error) {
@@ -50,6 +49,7 @@ public:
 		else if (strcmp(argv[0], "integration") == 0) {
 			try {
 				set_integration(argv[1], std::stod(argv[2]));
+				m_integration->ground_plane(m_particle_system->ground_plane());
 				return TCL_OK;
 			}
 			catch (const std::exception& error) {
@@ -59,8 +59,11 @@ public:
 		}
 		else if (strcmp(argv[0], "ground") == 0) {
 			try {
-				m_ground_spring.m_ks = std::stod(argv[1]);
-				m_ground_spring.m_kd = std::stod(argv[2]);
+				m_particle_system->ground_plane().ks(std::stod(argv[1]));
+				m_particle_system->ground_plane().kd(std::stod(argv[2]));
+				if (m_integration) {
+					m_integration->ground_plane(m_particle_system->ground_plane());
+				}
 				return TCL_OK;
 			}
 			catch (const std::exception& error) {
@@ -120,28 +123,22 @@ private:
 	BaseSystem* m_particle_system;
 	double m_gravity, m_drag = 0.0;
 	std::shared_ptr<Integration> m_integration;
-	Spring m_ground_spring;
 
 	void link_system(BaseSystem* p_sys, std::size_t num_springs)
 	{
 		m_particle_system = p_sys;
-		
-		for (std::size_t i{ 0 }; i < num_springs; ++i) {
-			Spring s;
-			m_particle_system->springs().push_back(s);
-		}
 	}
 
 	void set_integration(const std::string& inte, const double step_size)
 	{
 		if (inte == "euler") {
-			m_integration = std::make_shared<Euler>(step_size);
+			m_integration = std::make_shared<Euler>(step_size, m_particle_system->ground_plane());
 		}
 		else if (inte == "symplectic") {
-			m_integration = std::make_shared<Symplectic>(step_size);
+			m_integration = std::make_shared<Symplectic>(step_size, m_particle_system->ground_plane());
 		}
 		else if (inte == "verlet") {
-			m_integration = std::make_shared<Verlet>(step_size);
+			m_integration = std::make_shared<Verlet>(step_size, m_particle_system->ground_plane());
 		}
 		else {
 			throw std::runtime_error("Spring simulator does not support " + inte + " integration");

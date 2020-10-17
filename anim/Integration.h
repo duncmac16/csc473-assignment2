@@ -1,54 +1,60 @@
 #pragma once
 
 #include "Particle.h"
+#include "GroundPlane.h"
 
 class Integration {
 public:
-	Integration(const double time_step) :
-		m_step_size{ time_step } {}
+	Integration(const double time_step, GroundPlane& gp) :
+		m_step_size{ time_step }, m_ground_plane{ gp } {}
 
 	virtual void step(Particle& p) = 0;
 	virtual void gravity(const double& gravity) { m_gravity = gravity; }
 	virtual void drag(const double& drag) { m_drag = drag; }
+	virtual void ground_plane(const GroundPlane& gp) { m_ground_plane = gp; }
 
-	virtual void force(const Particle& p, Vector force)
+	virtual void force(Particle& p, Vector force)
 	{
 		double gf = p.m_mass * m_gravity;
-		if (p.m_spring) {
-			//TODO: Add spring force
-		}
 		setVector(force, 0.0, gf, 0.0);
+		for (const auto& s : p.m_springs) {
+			s->force(p, force);
+		}
 		Vector momentum;
 		VecCopy(momentum, p.m_velocity);
 		VecScale(momentum, p.m_mass);
 		VecAdd(force, force, momentum);
+		m_ground_plane.force(p, force);
 	}
 
 protected:
 	double m_step_size, m_gravity, m_drag = 0.0;
+	GroundPlane m_ground_plane;
 };
 
 class Euler : public Integration {
 public:
-	Euler(const double time_step) :
-		Integration{ time_step } {}
+	Euler(const double time_step, GroundPlane gp) :
+		Integration{ time_step, gp } {}
 
 	virtual void step(Particle& p)
 	{
 		Vector vi, acc;
+		// Acceleration Forces
 		force(p, acc);
 		VecScale(acc, m_step_size / p.m_mass);
 		VecCopy(vi, p.m_velocity);
 		VecAdd(p.m_velocity, p.m_velocity, acc);
-		VecScale(vi, m_step_size * (1 - m_drag));
+		// Applying drag
+		VecScale(vi, m_step_size * (1.0 - m_drag));
 		VecAdd(p.m_position, p.m_position, vi);
 	}
 };
 
 class Symplectic : public Integration {
 public:
-	Symplectic(const double time_step) :
-		Integration{ time_step } {}
+	Symplectic(const double time_step, GroundPlane gp) :
+		Integration{ time_step, gp } {}
 
 	virtual void step(Particle& p)
 	{
@@ -64,8 +70,8 @@ public:
 
 class Verlet : public Integration {
 public:
-	Verlet(const double time_step) :
-		Integration{ time_step } {}
+	Verlet(const double time_step, GroundPlane gp) :
+		Integration{ time_step, gp } {}
 
 	virtual void step(Particle& p)
 	{

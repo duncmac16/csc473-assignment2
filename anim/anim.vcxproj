@@ -112,13 +112,12 @@
     <ClInclude Include="BaseObject.h" />
     <ClInclude Include="BaseSimulator.h" />
     <ClInclude Include="GlobalResourceManager.h" />
+    <ClInclude Include="GroundPlane.h" />
     <ClInclude Include="Integration.h" />
     <ClInclude Include="myScene.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="SampleGravitySimulator.h" />
-    <ClInclude Include="SampleParticle.h" />
     <ClInclude Include="Spring.h" />
     <ClInclude Include="SpringSimulator.h" />
   </ItemGroup>

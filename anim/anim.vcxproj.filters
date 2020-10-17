@@ -64,12 +64,6 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SampleGravitySimulator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SampleParticle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SpringSimulator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -86,6 +80,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Integration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GroundPlane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

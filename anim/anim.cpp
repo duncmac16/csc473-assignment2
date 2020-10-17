@@ -418,9 +418,9 @@ void ReshapeCB(int w, int h)
 	/*** a larger field of view, therefore making the   ***/
 	/*** objects in the scene appear smaller            ***/
 	// glFrustum(-1,1,-1,1,7,100);
-	glOrtho(-6,6,-6,6,-500,500) ;
 	//glOrtho(-6,6,-6,6,-500,500) ;
-	//gluPerspective(20,(float) w/(float) h,1,100) ;
+	//glOrtho(-6,6,-6,6,-500,500) ;
+	gluPerspective(20,(float) w/(float) h,1,100) ;
 	//glFrustum(-1,1,-1,1,4,100);
 
 	glMatrixMode(GL_MODELVIEW);

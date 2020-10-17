@@ -4,10 +4,11 @@
 #include "BaseObject.h"
 #include "Particle.h"
 #include "Spring.h"
+#include "GroundPlane.h"
 
 #include <vector>
 
-class ParticleSystem: public BaseSystem {
+class ParticleSystem : public BaseSystem {
 public:
 	ParticleSystem(const std::string& name) :
 		BaseSystem{ name }, m_max{ 0 }
@@ -57,7 +58,7 @@ public:
 				p.set_velocity(vel);
 			}
 			return TCL_OK;
-		} 
+		}
 		else {
 			animTcl::OutputMessage("[Particle System] Error: Could not match command \"%s\" to any known commands\n",
 				argv[0]);
@@ -70,29 +71,35 @@ public:
 		for (auto& p : m_particles) {
 			p.display(mode);
 		}
+		for (auto& s : m_springs) {
+			s->display(mode);
+		}
+		m_ground_plane.display(mode);
 	}
 
 	virtual std::vector<Particle>& particles() override {
 		return m_particles;
 	}
 
-	void set_spring(std::size_t i, std::size_t p1, std::size_t p2, double ks, double kd, double rest_len)
+	virtual void set_spring(std::size_t p1, std::size_t p2, double ks, double kd, double rest_len) override
 	{
-		Spring s = m_springs[i];
-		s.m_ks = ks;
-		s.m_kd = kd;
-		s.m_rest_len = rest_len;
-		s.m_p1 = &m_particles[p1];
-		s.m_p2 = &m_particles[p2];
+		std::shared_ptr<Spring> s = std::make_shared<Spring>(&m_particles[p1], &m_particles[p2], ks, kd, rest_len);
+		m_particles[p1].m_springs.push_back(s);
+		m_particles[p2].m_springs.push_back(s);
+		m_springs.push_back(s);
 	}
 
-	virtual std::vector<Spring>& springs() override { return m_springs; }
+	virtual std::vector<std::shared_ptr<Spring>>& springs() override { return m_springs; }
+
+	virtual GroundPlane& ground_plane() override { return m_ground_plane; }
 
 
 private:
 	std::size_t m_max;
 	std::vector<Particle> m_particles;
-	std::vector<Spring> m_springs;
+	std::vector<std::shared_ptr<Spring>> m_springs;
+	GroundPlane m_ground_plane;
+
 
 	void set_max(const std::size_t max)
 	{
