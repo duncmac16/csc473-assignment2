@@ -2,13 +2,23 @@
 
 #include "BaseSystem.h"
 
+
+class Spring;
+
 class Particle{
 public:
+	double m_mass;
+	Vector m_position, m_velocity, x_1;
+	GLMmodel m_model;
+	bool m_fixed = false;
+	Spring* m_spring = nullptr;
+
 	Particle()
 	{
 		m_mass = 1.0;
 		setVector(m_position, 0.0, 0.0, 0.0);
 		setVector(m_velocity, 0.0, 0.0, 0.0);
+		VecCopy(x_1, m_position);
 	}
 
 	Particle(const double mass, const Vector position, const Vector velocity) : 
@@ -16,6 +26,7 @@ public:
 	{
 		VecCopy(m_position, position);
 		VecCopy(m_velocity, velocity);
+		VecCopy(x_1, m_position);
 	}
 
 	void set_velocity(const Vector v)
@@ -40,17 +51,13 @@ public:
 		glPushMatrix();
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		glTranslated(m_position[0], m_position[1], m_position[2]);
-		glScaled(0.1f, 0.1f, 0.1f);
+		glScaled(1.0f, 1.0f, 1.0f);
 
-		glmDraw(&m_model, GL_POINT);
+		glBegin(GL_POINTS);
+			glVertex3d(m_position[0], m_position[1], m_position[1]);
+		glEnd();
 
 		glPopAttrib();
 		glPopMatrix();
-	}
-
-private:
-	double m_mass;
-	Vector m_position, m_velocity;
-	GLMmodel m_model;
-	bool m_fixed;
+	}	
 };

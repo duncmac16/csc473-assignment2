@@ -330,7 +330,7 @@ the scene
 
 void mainLoop(void)
 {
-	glutMainLoop() ;
+	glutMainLoop();
 }
 
 void display(void)

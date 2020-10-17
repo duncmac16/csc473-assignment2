@@ -39,13 +39,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BaseSystem.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="anim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -73,13 +70,22 @@
     <ClInclude Include="SampleParticle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SpringSimulator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpringSimulator.h">
+    <ClInclude Include="BaseSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Integration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
